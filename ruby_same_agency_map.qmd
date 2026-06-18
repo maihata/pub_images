@@ -1,0 +1,93 @@
+---
+title: "ruby_1"
+format: pdf
+execute: 
+  eval: true 
+  echo: true
+  message: true 
+  warning: true
+  error: true
+editor: visual
+engine: knitr
+---
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(gt)
+library(DT)
+library(gtsummary)
+library(kableExtra)
+library(tinytex)
+library(janitor)
+library(tidylog)
+library(sjPlot)
+library(tibble)
+library(dplyr)
+library(epitools)
+library(grateful)
+library(readxl)
+library(scales)
+library(tidyr)
+library(patchwork)
+library(corrplot)
+library(distill)
+library(tibble)
+library(rcartocolor)
+library(ggplot2)
+library(quarto)
+library(knitr)
+library(corrplot)
+library(bslib)
+library(plotly)
+library(dplyr)
+library(markdown)
+library(devtools)
+```
+
+```{r}
+df <- read_excel("data/ruby_same_agency_map.xlsx")
+```
+
+```{r}
+# drop first column
+df <- df[, -1]
+```
+
+```{r}
+install.packages("devtools")
+```
+
+```{r}
+plot_geo(df, locationmode = "USA-states") %>%
+  add_trace(
+    z = ~ifelse(same_agency == "Y", 1, 0),
+    locations = ~state,
+    colorscale = list(list(0, "white"), list(1, "gray")),
+    zmin = 0, zmax = 1,
+    showscale = FALSE, 
+    marker = list(line = list(color = "black", width = 0.5))
+  ) %>%
+  layout(geo = list(scope = "usa"))
+```
+
+```{r}
+# install.packages("urbnmapr")
+```
+
+```{r}
+devtools::install_github("UrbanInstitute/urbnmapr")
+```
+
+```{r}
+# install.packages("urbnmapr")
+library(urbnmapr)
+library(ggplot2)
+
+territories %>%
+  left_join(df, by = c("state_abbv" = "state")) %>%
+  ggplot(aes(x = long, y = lat, group = group, fill = same_agency)) +
+  geom_polygon(color = "black", size = 0.2) +
+  scale_fill_manual(values = c("Y" = "gray", "N" = "white")) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45)
+```
