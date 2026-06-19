@@ -55,10 +55,6 @@ df <- df[, -1]
 ```
 
 ```{r}
-install.packages("devtools")
-```
-
-```{r}
 plot_geo(df, locationmode = "USA-states") %>%
   add_trace(
     z = ~ifelse(same_agency == "Y", 1, 0),
@@ -68,7 +64,8 @@ plot_geo(df, locationmode = "USA-states") %>%
     showscale = FALSE, 
     marker = list(line = list(color = "black", width = 0.5))
   ) %>%
-  layout(geo = list(scope = "usa"))
+  layout(geo = list(scope = "usa")) %>% 
+  config(displayModeBar = FALSE)
 ```
 
 ```{r}
@@ -76,18 +73,14 @@ plot_geo(df, locationmode = "USA-states") %>%
 ```
 
 ```{r}
-devtools::install_github("UrbanInstitute/urbnmapr")
-```
-
-```{r}
 # install.packages("urbnmapr")
-library(urbnmapr)
-library(ggplot2)
-
-territories %>%
-  left_join(df, by = c("state_abbv" = "state")) %>%
-  ggplot(aes(x = long, y = lat, group = group, fill = same_agency)) +
-  geom_polygon(color = "black", size = 0.2) +
-  scale_fill_manual(values = c("Y" = "gray", "N" = "white")) +
-  coord_map(projection = "albers", lat0 = 39, lat1 = 45)
+# library(urbnmapr)
+# library(ggplot2)
+# 
+# territories %>%
+#   left_join(df, by = c("state_abbv" = "state")) %>%
+#   ggplot(aes(x = long, y = lat, group = group, fill = same_agency)) +
+#   geom_polygon(color = "black", size = 0.2) +
+#   scale_fill_manual(values = c("Y" = "gray", "N" = "white")) +
+#   coord_map(projection = "albers", lat0 = 39, lat1 = 45)
 ```
